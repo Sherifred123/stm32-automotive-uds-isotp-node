@@ -1,0 +1,26 @@
+# Build Artifacts
+build/
+bin/
+obj/
+*.o
+*.obj
+*.exe
+*.elf
+*.bin
+*.hex
+*.map
+build_demo
+run_tests
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/

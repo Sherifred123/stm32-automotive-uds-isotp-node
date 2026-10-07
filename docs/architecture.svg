@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <filter id="dropGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="620" rx="16" fill="url(#bgGrad)"/>
+  
+  <!-- Outer Stroke -->
+  <rect x="2" y="2" width="996" height="616" rx="14" fill="none" stroke="#334155" stroke-width="2"/>
+
+  <!-- Header Title -->
+  <text x="50" y="50" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="700" fill="#f8fafc">
+    Automotive UDS (ISO 14229) &amp; ISO-TP (ISO 15765-2) Firmware Architecture
+  </text>
+  <text x="50" y="75" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#94a3b8">
+    Target: STM32F446RE (ARM Cortex-M4 @ 180 MHz) | Hardware bxCAN1 | MISRA-C Compliant Static Memory
+  </text>
+
+  <!-- ========================================================================= -->
+  <!-- LAYER 1: Diagnostic Client / Bus (Left) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(50, 110)" filter="url(#dropGlow)">
+    <rect width="240" height="460" rx="12" fill="url(#cardGrad)" stroke="#38bdf8" stroke-width="1.5"/>
+    <rect x="0" y="0" width="240" height="40" rx="12" fill="#0284c7" opacity="0.2"/>
+    <text x="20" y="26" font-family="sans-serif" font-size="14" font-weight="700" fill="#38bdf8">DIAGNOSTIC TESTER (HOST)</text>
+
+    <!-- Sub-cards -->
+    <rect x="15" y="55" width="210" height="75" rx="8" fill="#1e293b" stroke="#475569"/>
+    <text x="25" y="78" font-family="sans-serif" font-size="12" font-weight="700" fill="#e2e8f0">Python HIL Test Client</text>
+    <text x="25" y="98" font-family="sans-serif" font-size="11" fill="#94a3b8">• Automated UDS Suites</text>
+    <text x="25" y="115" font-family="sans-serif" font-size="11" fill="#94a3b8">• Live Telemetry Decoding</text>
+
+    <rect x="15" y="145" width="210" height="85" rx="8" fill="#1e293b" stroke="#475569"/>
+    <text x="25" y="168" font-family="sans-serif" font-size="12" font-weight="700" fill="#e2e8f0">Hardware Interface</text>
+    <text x="25" y="188" font-family="sans-serif" font-size="11" fill="#94a3b8">• USB-CAN / SocketCAN</text>
+    <text x="25" y="205" font-family="sans-serif" font-size="11" fill="#94a3b8">• Physical Transceiver / VCP</text>
+    <text x="25" y="222" font-family="sans-serif" font-size="11" fill="#94a3b8">• Baud: 500 kbps / 83.3% SP</text>
+
+    <!-- Identifiers Info -->
+    <rect x="15" y="245" width="210" height="195" rx="8" fill="#0f172a" stroke="#334155"/>
+    <text x="25" y="270" font-family="sans-serif" font-size="12" font-weight="700" fill="#38bdf8">CAN Identifiers (11-bit)</text>
+    <text x="25" y="295" font-family="monospace" font-size="11" fill="#f1f5f9">Phys Req : 0x7E0 (ECU)</text>
+    <text x="25" y="320" font-family="monospace" font-size="11" fill="#f1f5f9">Func Req : 0x7DF (Bcast)</text>
+    <text x="25" y="345" font-family="monospace" font-size="11" fill="#f1f5f9">Phys Resp: 0x7E8 (Rsp)</text>
+    <line x1="25" y1="360" x2="210" y2="360" stroke="#334155"/>
+    <text x="25" y="380" font-family="sans-serif" font-size="11" font-weight="700" fill="#a855f7">Timing Parameters</text>
+    <text x="25" y="400" font-family="monospace" font-size="10" fill="#cbd5e1">N_As/Ar/Bs/Cr: 1000 ms</text>
+    <text x="25" y="420" font-family="monospace" font-size="10" fill="#cbd5e1">STmin: 10 ms | BS: 8</text>
+  </g>
+
+  <!-- Bus Interconnect Arrows -->
+  <g stroke="#38bdf8" stroke-width="2" fill="none">
+    <path d="M 290 220 L 350 220" marker-end="url(#arrow)"/>
+    <path d="M 350 250 L 290 250"/>
+  </g>
+  <text x="300" y="210" font-family="sans-serif" font-size="10" font-weight="700" fill="#38bdf8">CAN_TX</text>
+  <text x="300" y="270" font-family="sans-serif" font-size="10" font-weight="700" fill="#38bdf8">CAN_RX</text>
+
+  <!-- ========================================================================= -->
+  <!-- LAYER 2: STM32 bxCAN & ISO-TP Stack (Center) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(350, 110)" filter="url(#dropGlow)">
+    <rect width="280" height="460" rx="12" fill="url(#cardGrad)" stroke="#818cf8" stroke-width="1.5"/>
+    <rect x="0" y="0" width="280" height="40" rx="12" fill="#4f46e5" opacity="0.2"/>
+    <text x="20" y="26" font-family="sans-serif" font-size="14" font-weight="700" fill="#818cf8">ISO 15765-2 TRANSPORT (DoCAN)</text>
+
+    <!-- bxCAN HAL Box -->
+    <rect x="15" y="55" width="250" height="90" rx="8" fill="#1e293b" stroke="#475569"/>
+    <text x="25" y="78" font-family="sans-serif" font-size="12" font-weight="700" fill="#e2e8f0">STM32 bxCAN Driver HAL</text>
+    <text x="25" y="98" font-family="sans-serif" font-size="11" fill="#94a3b8">• 32-bit Identifier Mask Filtering</text>
+    <text x="25" y="115" font-family="sans-serif" font-size="11" fill="#94a3b8">• Silicon Filter Bank 0 &amp; 1 Validation</text>
+    <text x="25" y="132" font-family="sans-serif" font-size="11" fill="#94a3b8">• Loopback &amp; Normal Mode Support</text>
+
+    <!-- ISO-TP Frame Types Box -->
+    <rect x="15" y="160" width="250" height="150" rx="8" fill="#1e293b" stroke="#475569"/>
+    <text x="25" y="183" font-family="sans-serif" font-size="12" font-weight="700" fill="#e2e8f0">N_PDU Protocol Engine</text>
+    <text x="25" y="203" font-family="monospace" font-size="11" fill="#38bdf8">SF (Single Frame)  : 1 - 7 B</text>
+    <text x="25" y="223" font-family="monospace" font-size="11" fill="#38bdf8">FF (First Frame)   : 8 - 4095 B</text>
+    <text x="25" y="243" font-family="monospace" font-size="11" fill="#38bdf8">FC (Flow Control)  : CTS, BS, STm</text>
+    <text x="25" y="263" font-family="monospace" font-size="11" fill="#38bdf8">CF (Consecutive)   : SN 0 - 15</text>
+    <text x="25" y="293" font-family="sans-serif" font-size="10" fill="#94a3b8">Zero-Heap Static 512B Buffer Reassembly</text>
+
+    <!-- Supervised Timers -->
+    <rect x="15" y="325" width="250" height="115" rx="8" fill="#0f172a" stroke="#334155"/>
+    <text x="25" y="348" font-family="sans-serif" font-size="12" font-weight="700" fill="#a855f7">Deterministic Timing Engine</text>
+    <text x="25" y="370" font-family="sans-serif" font-size="11" fill="#cbd5e1">• Inter-Frame Delay (STmin Scheduler)</text>
+    <text x="25" y="390" font-family="sans-serif" font-size="11" fill="#cbd5e1">• Consecutive Frame Timeout (N_Cr)</text>
+    <text x="25" y="410" font-family="sans-serif" font-size="11" fill="#cbd5e1">• Flow Control Wait Timeout (N_Bs)</text>
+    <text x="25" y="430" font-family="sans-serif" font-size="11" fill="#cbd5e1">• Sequence Number Wrap-around Guard</text>
+  </g>
+
+  <!-- Connective Arrows -->
+  <g stroke="#818cf8" stroke-width="2" fill="none">
+    <path d="M 630 330 L 690 330"/>
+    <path d="M 690 350 L 630 350"/>
+  </g>
+  <text x="635" y="322" font-family="sans-serif" font-size="10" font-weight="700" fill="#818cf8">UDS REQ</text>
+  <text x="635" y="368" font-family="sans-serif" font-size="10" font-weight="700" fill="#818cf8">UDS RSP</text>
+
+  <!-- ========================================================================= -->
+  <!-- LAYER 3: ISO 14229 UDS Diagnostic Server (Right) -->
+  <!-- ========================================================================= -->
+  <g transform="translate(690, 110)" filter="url(#dropGlow)">
+    <rect width="260" height="460" rx="12" fill="url(#cardGrad)" stroke="#34d399" stroke-width="1.5"/>
+    <rect x="0" y="0" width="260" height="40" rx="12" fill="#059669" opacity="0.2"/>
+    <text x="20" y="26" font-family="sans-serif" font-size="14" font-weight="700" fill="#34d399">ISO 14229 UDS SERVER</text>
+
+    <!-- Services Implemented -->
+    <rect x="15" y="55" width="230" height="155" rx="8" fill="#1e293b" stroke="#475569"/>
+    <text x="25" y="78" font-family="sans-serif" font-size="12" font-weight="700" fill="#e2e8f0">Supported UDS Services</text>
+    <text x="25" y="98" font-family="monospace" font-size="10" fill="#34d399">0x10 DiagSessionControl</text>
+    <text x="25" y="116" font-family="monospace" font-size="10" fill="#34d399">0x11 ECUReset (Hard / Soft)</text>
+    <text x="25" y="134" font-family="monospace" font-size="10" fill="#34d399">0x14 ClearDiagnosticInfo</text>
+    <text x="25" y="152" font-family="monospace" font-size="10" fill="#34d399">0x19 ReadDTCInformation</text>
+    <text x="25" y="170" font-family="monospace" font-size="10" fill="#34d399">0x22 ReadDataByIdentifier</text>
+    <text x="25" y="188" font-family="monospace" font-size="10" fill="#34d399">0x27 SecurityAccess (Level 1)</text>
+    <text x="25" y="204" font-family="monospace" font-size="10" fill="#34d399">0x2E WriteDataByIdentifier</text>
+
+    <!-- Security & Sessions -->
+    <rect x="15" y="225" width="230" height="110" rx="8" fill="#1e293b" stroke="#475569"/>
+    <text x="25" y="248" font-family="sans-serif" font-size="12" font-weight="700" fill="#e2e8f0">Security &amp; Session Guard</text>
+    <text x="25" y="268" font-family="sans-serif" font-size="11" fill="#cbd5e1">• Default / Programming / Extended</text>
+    <text x="25" y="286" font-family="sans-serif" font-size="11" fill="#cbd5e1">• S3 Server Timeout (5000 ms)</text>
+    <text x="25" y="304" font-family="sans-serif" font-size="11" fill="#cbd5e1">• LFSR 32-bit Challenge Seed</text>
+    <text x="25" y="322" font-family="sans-serif" font-size="11" fill="#cbd5e1">• 3-Attempt Lockout (10s Penalty)</text>
+
+    <!-- Board I/O & Telemetry -->
+    <rect x="15" y="350" width="230" height="90" rx="8" fill="#0f172a" stroke="#334155"/>
+    <text x="25" y="373" font-family="sans-serif" font-size="12" font-weight="700" fill="#f59e0b">NUCLEO Hardware Binding</text>
+    <text x="25" y="393" font-family="sans-serif" font-size="11" fill="#cbd5e1">• User LED (PA5): Session Pulse</text>
+    <text x="25" y="410" font-family="sans-serif" font-size="11" fill="#cbd5e1">• User Button (PC13): Fault Trigger</text>
+    <text x="25" y="427" font-family="sans-serif" font-size="11" fill="#cbd5e1">• USART2 (PA2/PA3): Diagnostic Log</text>
+  </g>
+
+  <!-- Footer Banner -->
+  <rect x="50" y="585" width="900" height="25" rx="6" fill="#0f172a"/>
+  <text x="60" y="602" font-family="sans-serif" font-size="11" font-weight="600" fill="#64748b">
+    ARCHITECTURE HIGHLIGHT: Pure C99 | MISRA-C Aligned | Zero Heap Dynamic Allocation | Hardware Filter Banks | STM32 bxCAN Controller
+  </text>
+</svg>
