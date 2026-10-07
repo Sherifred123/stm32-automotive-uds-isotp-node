@@ -31,7 +31,7 @@
 - [7. Hardware Pinout & Wiring (NUCLEO-F446RE)](#7-hardware-pinout--wiring-nucleo-f446re)
 - [8. Automated Verification & Test Results](#8-automated-verification--test-results)
 - [9. Quickstart Guide](#9-quickstart-guide)
-- [10. Technical Interview Defense Guide](#10-technical-interview-defense-guide)
+- [10. Architecture Design Decisions & Safety Rationale](#10-architecture-design-decisions--safety-rationale)
 
 ---
 
@@ -258,16 +258,16 @@ make arm
 
 ---
 
-## 10. Technical Interview Defense Guide
+## 10. Architecture Design Decisions & Safety Rationale
 
-### Q1: Why is ISO-TP needed on CAN? Why not just transmit standard 8-byte frames?
-> **Answer:** CAN 2.0B frames are physically restricted to 8 bytes payload. Real diagnostic operations (such as reading a 17-character VIN, downloading diagnostic trouble code snapshots, or updating ECU firmware) easily exceed 8 bytes. ISO 15765-2 defines a standardized network layer that provides segmentation, multi-frame reassembly (up to 4,095 bytes), flow control negotiation (`BS` and `STmin`), sequence number checking, and error timeouts (`N_Cr`, `N_Bs`).
+### 10.1 Multi-Frame Network Layer Protocol (ISO 15765-2 vs. Raw CAN)
+CAN 2.0B data link frames are restricted to 8-byte payloads. Production diagnostic procedures—such as Vehicle Identification Number (VIN) retrieval (17 bytes), Diagnostic Trouble Code (DTC) snapshot transfers, and In-Application Programming (IAP) binary streaming—exceed 8 bytes. This implementation encapsulates ISO 15765-2 to provide deterministic transport-layer segmentation, multi-frame reassembly (up to 4,095 bytes), flow control negotiation (`BlockSize` and `STmin`), sequence counter checking, and error timeouts (`N_Cr`, `N_Bs`).
 
-### Q2: What happens if an external diagnostic tester crashes while in an Extended Session?
-> **Answer:** The node implements an autonomous **S3 Server Inactivity Timer (`5000 ms`)**. If the tester does not issue requests or cyclic `TesterPresent` (`SID 0x3E`) messages within 5 seconds, the server automatically transitions back to the Default Session (`0x01`) and revokes all Security Access permissions, guaranteeing the vehicle cannot be left in an unsafe diagnostic state.
+### 10.2 Communication Loss & Tester Dropout Protection (S3 Server Timer)
+To prevent vehicles from remaining in elevated or safety-critical diagnostic states (e.g., Extended or Programming sessions) following a diagnostic tool disconnection or PC crash, the server enforces an autonomous **S3 Server Inactivity Timer (`5000 ms`)**. If cyclic `TesterPresent` (`SID 0x3E`) frames cease for more than 5 seconds, the state machine automatically reverts to the Default Diagnostic Session (`0x01`) and revokes all active Security Access privileges.
 
-### Q3: How do you prevent dynamic memory fragmentation in automotive firmware?
-> **Answer:** In compliance with MISRA-C:2012 Rule 21.3 and automotive safety standards (ISO 26262), dynamic memory functions (`malloc`, `free`, `realloc`) are strictly forbidden. All ISO-TP reception/transmission buffers are statically sized at compile time (`ISOTP_BUF_SIZE = 512 bytes`). First Frames with data lengths exceeding this limit immediately trigger a Flow Control frame with `FlowStatus = Overflow (0x02)` to cleanly reject the oversized request without risking memory corruption.
+### 10.3 Dynamic Memory Elimination (MISRA-C:2012 Rule 21.3)
+In strict compliance with automotive functional safety requirements (ISO 26262), heap allocation (`malloc`, `free`, `realloc`) is eliminated to guarantee zero runtime fragmentation risk and deterministic memory bounds. All ISO-TP reception and transmission buffers are statically fixed (`ISOTP_BUF_SIZE = 512 bytes`). Payloads exceeding this ceiling trigger an immediate Flow Control frame with `FlowStatus = Overflow (0x02)`, cleanly aborting the transaction without memory corruption.
 
 ---
 
