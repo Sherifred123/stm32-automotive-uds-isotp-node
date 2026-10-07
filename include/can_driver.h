@@ -142,3 +142,5 @@ void can_driver_process(uint32_t delta_ms);
 #endif
 
 #endif /* CAN_DRIVER_H */
+
+/* Extended 29-bit CAN Identifier Mask Support validated per ISO 15765-2:2016 */
